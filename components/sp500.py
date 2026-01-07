@@ -38,7 +38,13 @@ def render_sp500(sp500, periods):
         yaxis_title="S&P 500"
     )
 
-    fig.update_xaxes(showgrid=True, rangeslider_visible=True)
+    fig.update_xaxes(
+    showgrid=True,
+    rangeslider_visible=True,
+    autorange=True,              # 👈 clé
+    fixedrange=False             # 👈 autorise le déplacement
+)
+
     fig.update_yaxes(showgrid=True)
 
     st.plotly_chart(fig, use_container_width=True)
