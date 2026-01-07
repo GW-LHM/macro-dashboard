@@ -16,38 +16,38 @@ def render_sp500(sp500, periods):
         line=dict(color="#1f77b4", width=2)
     ))
 
-    # Bandes mensuelles d'inversion
+    # Bandes d'inversion mensuelles
     for start, end, months in periods:
         if months >= 9:
-            color = "rgba(214,39,40,0.15)"   # 🔴 ≥ 9 mois
+            fill = "rgba(214,39,40,0.15)"   # rouge
         elif months >= 6:
-            color = "rgba(255,127,14,0.12)"  # 🟠 ≥ 6 mois
+            fill = "rgba(255,127,14,0.12)"  # orange
         else:
             continue
 
         fig.add_vrect(
             x0=start,
             x1=end,
-            fillcolor=color,
+            fillcolor=fill,
             line_width=0
         )
 
-fig.update_layout(
-    height=450,
-    hovermode="x unified",
-    xaxis_title="Date",
-    yaxis_title="S&P 500",
-    xaxis=dict(
-        range=[sp500.index.min(), sp500.index.max()],
-        fixedrange=False
-
-)
+    # Layout explicite (clé pour éviter les bugs Plotly/Streamlit)
+    fig.update_layout(
+        height=450,
+        hovermode="x unified",
+        xaxis_title="Date",
+        yaxis_title="S&P 500",
+        xaxis=dict(
+            range=[sp500.index.min(), sp500.index.max()],
+            fixedrange=False
+        )
+    )
 
     fig.update_xaxes(
-    showgrid=True,
-    rangeslider_visible=True
-)
-
+        showgrid=True,
+        rangeslider_visible=True
+    )
 
     fig.update_yaxes(showgrid=True)
 
