@@ -139,6 +139,12 @@ fig_spread.update_layout(
     yaxis_title="Spread (%)",
     margin=dict(l=40, r=40, t=40, b=40)
 )
+
+fig_spread.update_xaxes(rangeslider_visible=True, showgrid=True)
+fig_spread.update_yaxes(showgrid=True)
+
+st.plotly_chart(fig_spread, use_container_width=True)
+
 st.markdown("""
 ### Comment lire le spread 10Y – 3M ?
 
@@ -151,8 +157,3 @@ et le taux à très court terme (3 mois) aux États-Unis.
 Historiquement, les inversions ont souvent précédé des ralentissements
 ou des récessions, avec un délai variable.
 """)
-
-fig_spread.update_xaxes(rangeslider_visible=True, showgrid=True)
-fig_spread.update_yaxes(showgrid=True)
-
-st.plotly_chart(fig_spread, use_container_width=True)
