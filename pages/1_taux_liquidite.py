@@ -17,6 +17,7 @@ Ce bloc constitue la fondation du cycle macroéconomique.
 BASE_URL = "https://api.stlouisfed.org/fred/series/observations"
 
 SERIES = {
+    "Taux US 3M (%)": "DGS3MO",
     "Taux US 2Y (%)": "DGS2",
     "Taux US 10Y (%)": "DGS10"
 }
@@ -57,6 +58,10 @@ df = df.dropna()
 
 # Limiter l'historique (ex : depuis 2000)
 df = df[df.index >= "2022-01-01"]
+
+# Calcul des spreads
+df["Spread 10Y-2Y"] = df["Taux US 10Y (%)"] - df["Taux US 2Y (%)"]
+df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 
 
 # -------------------------
@@ -99,4 +104,41 @@ fig.update_xaxes(
 fig.update_yaxes(showgrid=True)
 
 st.plotly_chart(fig, use_container_width=True)
+
+st.subheader("Spread des taux – Signal macro")
+
+fig_spread = go.Figure()
+
+fig_spread.add_trace(go.Scatter(
+    x=df.index,
+    y=df["Spread 10Y-3M"],
+    mode="lines",
+    name="Spread 10Y – 3M",
+    line=dict(width=2, color="#000000")
+))
+
+# Ligne zéro (seuil d'inversion)
+fig_spread.add_hline(
+    y=0,
+    line_dash="dash",
+    line_color="red"
+)
+
+fig_spread.update_layout(
+    height=350,
+    hovermode="x unified",
+    xaxis_title="Date",
+    yaxis_title="Spread (%)",
+    margin=dict(l=40, r=40, t=40, b=40)
+)
+
+fig_spread.update_xaxes(
+    rangeslider_visible=True,
+    showgrid=True
+)
+
+fig_spread.update_yaxes(showgrid=True)
+
+st.plotly_chart(fig_spread, use_container_width=True)
+
 
