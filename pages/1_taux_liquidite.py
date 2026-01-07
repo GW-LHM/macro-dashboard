@@ -146,14 +146,45 @@ fig_spread.update_yaxes(showgrid=True)
 st.plotly_chart(fig_spread, use_container_width=True)
 
 st.markdown("""
-### Comment lire le spread 10Y – 3M ?
+### 🧠 Comment lire le spread **10Y – 3M** ?
 
-Ce graphique montre la différence entre le taux d’intérêt à long terme (10 ans)
-et le taux à très court terme (3 mois) aux États-Unis.
+Ce graphique montre la **différence entre le taux d’intérêt à long terme (10 ans)**  
+et le **taux à très court terme (3 mois)** aux États-Unis.  
+Il permet d’évaluer **l’état du cycle économique**.
 
-- **Au-dessus de 0** : situation économique normale  
-- **En dessous de 0** : inversion des taux, signal d’alerte économique  
+---
 
-Historiquement, les inversions ont souvent précédé des ralentissements
-ou des récessions, avec un délai variable.
+### 🟢 **Au-dessus de 0** 📈  
+➡️ Situation économique **normale**
+
+- Les taux longs sont plus élevés que les taux courts  
+- Les marchés anticipent **croissance et stabilité**  
+- Contexte généralement **favorable aux actifs risqués**
+
+---
+
+### 🔴 **En dessous de 0** 📉 *(inversion des taux)*  
+⚠️ **Signal d’alerte macroéconomique**
+
+- Les taux courts dépassent les taux longs  
+- Les marchés anticipent un **ralentissement économique**  
+- Historiquement, ce phénomène a souvent **précédé des récessions**
+
+👉 Le signal devient **significatif** lorsqu’il dure **plusieurs mois consécutifs**  
+Les inversions très courtes peuvent être du **bruit de marché**
+
+---
+
+### ⏳ À retenir
+- Ce n’est **pas une prévision immédiate**  
+- Le délai entre l’inversion et ses effets peut varier  
+- C’est un **indicateur de cycle**, pas un outil de timing précis
+
+---
+
+### 🧭 Lecture rapide
+- 🟢 **Spread durablement positif** → cycle normal  
+- 🔴 **Spread négatif prolongé** → alerte macro confirmée  
+- 🔁 **Retour au-dessus de 0 après inversion** → phase tardive du cycle
 """)
+
