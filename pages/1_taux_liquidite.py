@@ -116,7 +116,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Spread des taux 10Y - 3M)
 st.markdown("""
-### Comment lire ce graphique ?
+### Comment lire le spread 10Y – 3M ?
 
 Ce graphique montre la différence entre le taux d’intérêt à long terme (10 ans)
 et le taux à très court terme (3 mois) aux États-Unis.
@@ -128,7 +128,7 @@ Historiquement, les inversions ont souvent précédé des ralentissements
 ou des récessions, avec un délai variable.
 """)
 
-
+st.subheader("Spread des taux – Signal macro")
 
 fig_spread = go.Figure()
 
@@ -140,7 +140,6 @@ fig_spread.add_trace(go.Scatter(
     line=dict(width=2, color="#000000")
 ))
 
-# Ligne zéro (seuil d'inversion)
 fig_spread.add_hline(
     y=0,
     line_dash="dash",
@@ -155,13 +154,7 @@ fig_spread.update_layout(
     margin=dict(l=40, r=40, t=40, b=40)
 )
 
-fig_spread.update_xaxes(
-    rangeslider_visible=True,
-    showgrid=True
-)
-
+fig_spread.update_xaxes(rangeslider_visible=True, showgrid=True)
 fig_spread.update_yaxes(showgrid=True)
 
 st.plotly_chart(fig_spread, use_container_width=True)
-
-
