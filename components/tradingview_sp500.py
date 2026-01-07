@@ -13,14 +13,14 @@ def render_tradingview_sp500():
 new TradingView.widget({
   "width": "100%",
   "height": 500,
-  "symbol": "INDEX:SPX",
+  "symbol": "AMEX:SPY",
   "interval": "M",
   "timezone": "Etc/UTC",
   "theme": "light",
   "style": "1",
   "locale": "fr",
   "allow_symbol_change": false,
-  "container_id": "tradingview_spx"
+  "container_id": "tradingview_sp500"
 });
 </script>
     </div>
