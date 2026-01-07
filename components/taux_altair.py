@@ -62,16 +62,3 @@ def render_taux_altair(df):
     )
 
     st.altair_chart(chart, use_container_width=True)
-
-    st.markdown(
-        """
-**Comment lire ces courbes ?**
-
-- 📉 **Aplatissement** : ralentissement économique  
-- 🔁 **Inversion (2Y ou 3M > 10Y)** : signal macro avancé  
-- 📈 **Re-pentification** : phase de transition ou reprise  
-
-Les taux courts reflètent la politique monétaire,  
-les taux longs anticipent la croissance future.
-"""
-    )
