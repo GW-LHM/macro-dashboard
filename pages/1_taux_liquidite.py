@@ -56,7 +56,7 @@ for label, series_id in SERIES.items():
 df = df.dropna()
 
 # Limiter l'historique (ex : depuis 2000)
-df = df[df.index >= "2000-01-01"]
+df = df[df.index >= "2022-01-01"]
 
 
 # -------------------------
@@ -79,7 +79,7 @@ fig.add_trace(go.Scatter(
     y=df["Taux US 2Y (%)"],
     mode="lines",
     name="Taux US 2Y",
-    line=dict(width=2, color="#F54927")
+    line=dict(width=0.5, color="#F54927")
 ))
 
 fig.update_layout(
