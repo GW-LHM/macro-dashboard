@@ -87,6 +87,15 @@ fig.add_trace(go.Scatter(
     line=dict(width=0.8, color="#F54927")
 ))
 
+fig.add_trace(go.Scatter(
+    x=df.index,
+    y=df["Taux US 3M (%)"],
+    mode="lines",
+    name="Taux US 3M",
+    line=dict(width=0.8, color="#2ca02c")  # vert
+))
+
+
 fig.update_layout(
     height=500,
     hovermode="x unified",
