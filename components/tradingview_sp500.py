@@ -10,22 +10,19 @@ def render_tradingview_sp500():
       <div id="tradingview_spx"></div>
       <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
       <script type="text/javascript">
-      new TradingView.widget({
-        "width": "100%",
-        "height": 500,
-        "symbol": "SP:SPX",
-        "interval": "M",
-        "timezone": "Etc/UTC",
-        "theme": "light",
-        "style": "1",
-        "locale": "fr",
-        "toolbar_bg": "#f1f3f6",
-        "enable_publishing": false,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": false,
-        "container_id": "tradingview_spx"
-      });
-      </script>
+new TradingView.widget({
+  "width": "100%",
+  "height": 500,
+  "symbol": "SP:SPX",
+  "interval": "M",
+  "timezone": "Etc/UTC",
+  "theme": "light",
+  "style": "1",
+  "locale": "fr",
+  "allow_symbol_change": false,
+  "container_id": "tradingview_spx"
+});
+</script>
     </div>
     """
 
