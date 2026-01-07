@@ -1,9 +1,15 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import streamlit as st
 import pandas as pd
 
 from data.fred import load_fred_series
 from components.taux_altair import render_taux_altair
 from components.spread_altair import render_spread_altair
+
 
 
 # =========================
