@@ -35,6 +35,37 @@ df = df[df.index >= "2000-01-01"]
 # Spread
 df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 
+# =========================
+# Spread mensuel (version macro propre)
+# =========================
+df_monthly = df[["Spread 10Y-3M"]].resample("M").mean()
+
+# =========================
+# Inversions mensuelles prolongées
+# =========================
+inversion_monthly = df_monthly["Spread 10Y-3M"] < 0
+
+periods_monthly = []
+start = None
+count = 0
+
+for date, is_neg in inversion_monthly.items():
+    if is_neg:
+        if start is None:
+            start = date
+            count = 1
+        else:
+            count += 1
+    else:
+        if start is not None:
+            periods_monthly.append((start, date, count))
+            start = None
+            count = 0
+
+if start is not None:
+    periods_monthly.append((start, inversion_monthly.index[-1], count))
+
+
 # S&P 500
 sp500 = load_fred_series(SERIES_SP500)
 sp500 = sp500.rename(columns={"value": "S&P 500"})
