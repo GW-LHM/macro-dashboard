@@ -1,20 +1,17 @@
 import streamlit as st
 import pandas as pd
-import requests
-import plotly.graph_objects as go
 
+from data.fred import load_fred_series
+from components.taux_us import render_taux_us
+from components.spread import render_spread
+from components.sp500 import render_sp500
 
 st.header("🏦 Taux & Liquidité")
 
 st.markdown("""
-Analyse des taux d’intérêt américains à partir des données officielles FRED.
-Ce bloc constitue la fondation du cycle macroéconomique.
+Cette page analyse les taux d’intérêt américains et leur impact
+sur le cycle économique et les marchés financiers.
 """)
-
-# -------------------------
-# Configuration FRED
-# -------------------------
-BASE_URL = "https://api.stlouisfed.org/fred/series/observations"
 
 SERIES = {
     "Taux US 3M (%)": "DGS3MO",
@@ -22,223 +19,58 @@ SERIES = {
     "Taux US 10Y (%)": "DGS10"
 }
 
-# -------------------------
+SERIES_SP500 = "SP500"
+
+# =========================
 # Chargement des données
-# -------------------------
-@st.cache_data
-def load_fred_series(series_id):
-    api_key = st.secrets["FRED_API_KEY"]  # 👈 LIGNE CLÉ ICI
-
-    params = {
-        "series_id": series_id,
-        "api_key": api_key,
-        "file_type": "json"
-    }
-
-    response = requests.get(BASE_URL, params=params, timeout=10)
-    response.raise_for_status()
-
-    data = response.json()["observations"]
-    df = pd.DataFrame(data)[["date", "value"]]
-    df["date"] = pd.to_datetime(df["date"])
-    df["value"] = pd.to_numeric(df["value"], errors="coerce")
-
-    return df.set_index("date")
-
-# -------------------------
-# Assemblage des séries
-# -------------------------
+# =========================
 df = pd.DataFrame()
 
 for label, series_id in SERIES.items():
-    series = load_fred_series(series_id)
-    df[label] = series["value"]
+    df[label] = load_fred_series(series_id)["value"]
 
 df = df.dropna()
+df = df[df.index >= "2000-01-01"]
 
-# Limiter l'historique (ex : depuis 2000)
-df = df[df.index >= "2022-01-01"]
-
-# Calcul des spreads
-df["Spread 10Y-2Y"] = df["Taux US 10Y (%)"] - df["Taux US 2Y (%)"]
+# Spread
 df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 
-# =========================
-# Temporalité du spread 10Y–3M
-# =========================
-spread = df["Spread 10Y-3M"]
-
-# Détecter si le spread est actuellement négatif
-is_negative_now = spread.iloc[-1] < 0
-
-days_negative = 0
-
-if is_negative_now:
-    # Remonter jusqu’au dernier jour positif
-    reversed_spread = spread[::-1]
-    for date, value in reversed_spread.items():
-        if value >= 0:
-            break
-        days_negative += 1
+# S&P 500
+sp500 = load_fred_series(SERIES_SP500)
+sp500 = sp500.rename(columns={"value": "S&P 500"})
+sp500 = sp500[sp500.index >= df.index.min()]
 
 # =========================
-# État macro basé sur la durée
+# Périodes d'inversion prolongée
 # =========================
-if not is_negative_now:
-    macro_state = "normal"
-elif days_negative < 60:
-    macro_state = "alerte_en_cours"
-else:
-    macro_state = "alerte_confirmee"
+inversion = df["Spread 10Y-3M"] < 0
 
-# =========================
-# État macro & temporalité
-# =========================
-latest_spread = df["Spread 10Y-3M"].iloc[-1]
+periods = []
+start = None
+count = 0
 
-# Détection de la période négative en cours
-negative_period = df["Spread 10Y-3M"] < 0
+for date, is_neg in inversion.items():
+    if is_neg:
+        if start is None:
+            start = date
+            count = 1
+        else:
+            count += 1
+    else:
+        if start is not None:
+            periods.append((start, date, count))
+            start = None
+            count = 0
 
-if negative_period.iloc[-1]:
-    # nombre de jours consécutifs sous 0
-    days_negative = (negative_period[::-1].idxmax() - df.index[-1]).days
-    days_negative = abs(days_negative)
-    spread_status = "alerte"
-else:
-    days_negative = 0
-    spread_status = "normal"
+if start is not None:
+    periods.append((start, inversion.index[-1], count))
 
-# -------------------------
-# Affichage
-# -------------------------
-st.subheader("Évolution des taux US (10Y vs 2Y vs 3M)")
-fig = go.Figure()
+render_taux_us(df)
 
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df["Taux US 10Y (%)"],
-    mode="lines",
-    name="Taux US 10Y",
-    line=dict(width=0.8, color="#1f77b4")  # bleu foncé
+st.divider()
 
-))
+render_spread(df)
 
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df["Taux US 2Y (%)"],
-    mode="lines",
-    name="Taux US 2Y",
-    line=dict(width=0.8, color="#F54927")
-))
+st.divider()
 
-fig.add_trace(go.Scatter(
-    x=df.index,
-    y=df["Taux US 3M (%)"],
-    mode="lines",
-    name="Taux US 3M",
-    line=dict(width=0.8, color="#2ca02c")  # vert
-))
-
-
-fig.update_layout(
-    height=500,
-    hovermode="x unified",
-    xaxis_title="Date",
-    yaxis_title="Taux (%)",
-    legend=dict(orientation="h", y=1.1),
-    margin=dict(l=40, r=40, t=40, b=40)
-)
-
-fig.update_xaxes(
-    rangeslider_visible=True,
-    showgrid=True
-)
-
-fig.update_yaxes(showgrid=True)
-
-st.plotly_chart(fig, use_container_width=True)
-
-st.subheader("Spread des taux 10Y - 3M")
-
-if macro_state == "normal":
-    st.success("🟢 **Situation normale** — spread positif")
-elif macro_state == "alerte_en_cours":
-    st.warning(
-        f"🟠 **Alerte en cours** — spread négatif depuis **{days_negative} jours**"
-    )
-else:
-    st.error(
-        f"🔴 **Alerte confirmée** — spread négatif depuis **{days_negative} jours**"
-    )
-
-fig_spread = go.Figure()
-
-fig_spread.add_trace(go.Scatter(
-    x=df.index,
-    y=df["Spread 10Y-3M"],
-    mode="lines",
-    name="Spread 10Y – 3M",
-    line=dict(width=2, color="#000000")
-))
-
-fig_spread.add_hline(
-    y=0,
-    line_dash="dash",
-    line_color="red"
-)
-
-fig_spread.update_layout(
-    height=350,
-    hovermode="x unified",
-    xaxis_title="Date",
-    yaxis_title="Spread (%)",
-    margin=dict(l=40, r=40, t=40, b=40)
-)
-
-fig_spread.update_xaxes(rangeslider_visible=True, showgrid=True)
-fig_spread.update_yaxes(showgrid=True)
-
-st.plotly_chart(fig_spread, use_container_width=True)
-
-st.markdown("""
-### 🧠 Comment lire le spread **10Y – 3M** ?
-
-Ce graphique montre la **différence entre le taux d’intérêt à long terme (10 ans)**  
-et le **taux à très court terme (3 mois)** aux États-Unis.  
-Il permet d’évaluer **l’état du cycle économique**.
-
----
-
-### 🟢 **Au-dessus de 0** 📈  
-➡️ Situation économique **normale**
-
-- Les taux longs sont plus élevés que les taux courts  
-- Les marchés anticipent **croissance et stabilité**  
-- Contexte généralement **favorable aux actifs risqués**
-
----
-
-### 🔴 **En dessous de 0** 📉 *(inversion des taux)*  
-⚠️ **Signal d’alerte macroéconomique**
-
-- Les taux courts dépassent les taux longs  
-- Les marchés anticipent un **ralentissement économique**  
-- Historiquement, ce phénomène a souvent **précédé des récessions**
-
-👉 Le signal devient **significatif** lorsqu’il dure **plusieurs mois consécutifs**  
-Les inversions très courtes peuvent être du **bruit de marché**
-
----
-
-### ⏳ À retenir
-- Ce n’est **pas une prévision immédiate**  
-- Le délai entre l’inversion et ses effets peut varier  
-- C’est un **indicateur de cycle**, pas un outil de timing précis
-
----
-
-### 🧭 Lecture rapide
-- 🟢 **Spread durablement positif** → cycle normal  
-- 🔴 **Spread négatif prolongé** → alerte macro confirmée  
-- 🔁 **Retour au-dessus de 0 après inversion** → phase tardive du cycle
-""")
+render_sp500(sp500, periods)
