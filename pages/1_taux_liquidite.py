@@ -6,6 +6,7 @@ from components.taux_us import render_taux_us
 from components.spread import render_spread
 from components.sp500 import render_sp500
 
+
 st.header("🏦 Taux & Liquidité")
 
 st.markdown("""
