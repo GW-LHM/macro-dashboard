@@ -6,27 +6,28 @@ import pandas as pd
 def render_taux_altair(df):
     st.subheader("📈 Taux US – 10Y / 2Y / 3M")
 
-    # Préparer les données au format long (Altair-friendly)
+    # Sécuriser l'index date
     data = df[
         [
             "Taux US 10Y (%)",
             "Taux US 2Y (%)",
             "Taux US 3M (%)",
         ]
-    ].reset_index()
+    ].copy()
 
-    data.rename(columns={"index": "Date"}, inplace=True)
+    data = data.reset_index()
+    data.columns = ["Date", "Taux US 10Y (%)", "Taux US 2Y (%)", "Taux US 3M (%)"]
 
+    # Passage au format long (Altair)
     data = data.melt(
         id_vars="Date",
         var_name="Maturité",
         value_name="Taux",
     )
 
-    # Sélection zoom / pan
+    # Zoom / pan
     brush = alt.selection_interval(bind="scales")
 
-    # Graphique des courbes de taux
     chart = (
         alt.Chart(data)
         .mark_line(strokeWidth=1.6)
@@ -57,7 +58,6 @@ def render_taux_altair(df):
 
     st.altair_chart(chart, use_container_width=True)
 
-    # Texte pédagogique
     st.markdown(
         """
 **Comment lire ces courbes ?**
