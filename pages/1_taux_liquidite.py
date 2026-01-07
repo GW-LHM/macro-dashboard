@@ -139,13 +139,32 @@ else:
 
 fig_spread = go.Figure()
 
+fig_spread.add_hrect(
+    y0=-10,
+    y1=0,
+    fillcolor="rgba(214,39,40,0.15)",
+    line_width=0
+)
+
+fig_spread.add_hrect(
+    y0=0,
+    y1=10,
+    fillcolor="rgba(44,160,44,0.15)",
+    line_width=0
+)
+
+
 fig_spread.add_trace(go.Scatter(
     x=df.index,
     y=df["Spread 10Y-3M"],
     mode="lines",
     name="Spread 10Y – 3M",
-    line=dict(width=2, color="#000000")
+    line=dict(
+        width=2,
+        color="red" if spread_status == "alerte" else "green"
+    )
 ))
+
 
 fig_spread.add_hline(
     y=0,
