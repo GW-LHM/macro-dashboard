@@ -114,7 +114,7 @@ fig.update_yaxes(showgrid=True)
 
 st.plotly_chart(fig, use_container_width=True)
 
-st.subheader("Spread des taux 10Y - 3M)
+st.subheader("Spread des taux 10Y - 3M")
 st.markdown("""
 ### Comment lire le spread 10Y – 3M ?
 
