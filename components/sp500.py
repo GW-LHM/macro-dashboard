@@ -32,23 +32,22 @@ def render_sp500(sp500, periods):
             line_width=0
         )
 
-    fig.update_layout(
-        height=450,
-        hovermode="x unified",
-        xaxis_title="Date",
-        yaxis_title="S&P 500",
-        xaxis_range=[
-            sp500.index.min(),
-            sp500.index.max()
-        ]
-    )
-
-    fig.update_xaxes(
-        showgrid=True,
-        rangeslider_visible=True,
-        autorange=True,
+fig.update_layout(
+    height=450,
+    hovermode="x unified",
+    xaxis_title="Date",
+    yaxis_title="S&P 500",
+    xaxis=dict(
+        range=[sp500.index.min(), sp500.index.max()],
         fixedrange=False
     )
+)
+
+    fig.update_xaxes(
+    showgrid=True,
+    rangeslider_visible=True
+)
+
 
     fig.update_yaxes(showgrid=True)
 
