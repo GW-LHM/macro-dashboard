@@ -64,6 +64,34 @@ df["Spread 10Y-2Y"] = df["Taux US 10Y (%)"] - df["Taux US 2Y (%)"]
 df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 
 # =========================
+# Temporalité du spread 10Y–3M
+# =========================
+spread = df["Spread 10Y-3M"]
+
+# Détecter si le spread est actuellement négatif
+is_negative_now = spread.iloc[-1] < 0
+
+days_negative = 0
+
+if is_negative_now:
+    # Remonter jusqu’au dernier jour positif
+    reversed_spread = spread[::-1]
+    for date, value in reversed_spread.items():
+        if value >= 0:
+            break
+        days_negative += 1
+
+# =========================
+# État macro basé sur la durée
+# =========================
+if not is_negative_now:
+    macro_state = "normal"
+elif days_negative < 60:
+    macro_state = "alerte_en_cours"
+else:
+    macro_state = "alerte_confirmee"
+
+# =========================
 # État macro & temporalité
 # =========================
 latest_spread = df["Spread 10Y-3M"].iloc[-1]
@@ -132,10 +160,16 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Spread des taux 10Y - 3M")
 
-if spread_status == "alerte":
-    st.error(f"🔴 **Alerte macro** — Spread négatif depuis **{days_negative} jours**")
+if macro_state == "normal":
+    st.success("🟢 **Situation normale** — spread positif")
+elif macro_state == "alerte_en_cours":
+    st.warning(
+        f"🟠 **Alerte en cours** — spread négatif depuis **{days_negative} jours**"
+    )
 else:
-    st.success("🟢 **Situation normale** — Spread positif")
+    st.error(
+        f"🔴 **Alerte confirmée** — spread négatif depuis **{days_negative} jours**"
+    )
 
 fig_spread = go.Figure()
 
