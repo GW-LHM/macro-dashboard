@@ -1,18 +1,30 @@
 import streamlit as st
 import pandas as pd
+from pandas_datareader import data as pdr
+from datetime import datetime
 
 st.header("🏦 Taux & Liquidité")
 
 st.markdown("""
-Ce bloc analyse la structure des taux d’intérêt.
-Il sert de fondation à l’analyse macroéconomique.
+Analyse des taux d’intérêt américains via les données officielles de la Réserve fédérale (FRED).
+Ce bloc constitue la fondation du cycle macroéconomique.
 """)
 
-data = pd.DataFrame({
-    "Année": [2019, 2020, 2021, 2022, 2023, 2024],
-    "Taux 2Y (%)": [2.5, 0.5, 0.8, 3.5, 4.8, 5.0],
-    "Taux 10Y (%)": [2.7, 0.7, 1.5, 3.0, 4.0, 4.2]
-}).set_index("Année")
+# Paramètres
+start_date = datetime(2000, 1, 1)
+end_date = datetime.today()
 
-st.subheader("Évolution des taux US (exemple)")
-st.line_chart(data)
+@st.cache_data
+def load_rates():
+    taux_2y = pdr.DataReader("DGS2", "fred", start_date, end_date)
+    taux_10y = pdr.DataReader("DGS10", "fred", start_date, end_date)
+
+    df = pd.concat([taux_2y, taux_10y], axis=1)
+    df.columns = ["Taux US 2Y (%)", "Taux US 10Y (%)"]
+    df = df.dropna()
+    return df
+
+df_rates = load_rates()
+
+st.subheader("Évolution des taux US (2Y vs 10Y)")
+st.line_chart(df_rates)
