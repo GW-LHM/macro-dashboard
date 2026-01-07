@@ -17,12 +17,16 @@ from components.spread_altair import render_spread_altair
 # =========================
 st.header("🏦 Taux & Liquidité")
 
-st.markdown(
-    """
-Cette page analyse les **taux d’intérêt américains** et leur rôle
-dans le **cycle macroéconomique**.
-"""
-)
+st.markdown("""
+Le **marché obligataire américain** est le principal moteur du système financier mondial.  
+Les taux d’intérêt et la liquidité déterminent le **coût du capital**, influencent
+le crédit, et façonnent les **cycles économiques**.
+
+Les marchés actions réagissent souvent **avec retard** aux déséquilibres
+qui apparaissent d’abord sur les taux.  
+C’est pourquoi l’analyse du marché obligataire est une **étape fondamentale**
+avant toute lecture des marchés financiers.
+""")
 
 st.divider()
 
