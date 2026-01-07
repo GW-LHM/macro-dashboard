@@ -3,44 +3,54 @@ import altair as alt
 import pandas as pd
 
 
-def render_spread_altair(df):
-    st.subheader("📉 Spread des taux US 10Y – 3M")
+def render_taux_altair(df):
+    st.subheader("📈 Taux US – 10Y / 2Y / 3M")
 
-    # Préparer les données
-    data = df[["Spread 10Y-3M"]].reset_index()
-    data.columns = ["Date", "Spread"]
+    # Préparer les données au format long (Altair-friendly)
+    data = df[
+        [
+            "Taux US 10Y (%)",
+            "Taux US 2Y (%)",
+            "Taux US 3M (%)",
+        ]
+    ].reset_index()
+
+    data.rename(columns={"index": "Date"}, inplace=True)
+
+    data = data.melt(
+        id_vars="Date",
+        var_name="Maturité",
+        value_name="Taux",
+    )
 
     # Sélection zoom / pan
     brush = alt.selection_interval(bind="scales")
 
-    # Ligne du spread
-    spread_line = alt.Chart(data).mark_line(
-        color="#1f2937",  # gris foncé élégant
-        strokeWidth=1.8
-    ).encode(
-        x=alt.X("Date:T", title="Date"),
-        y=alt.Y(
-            "Spread:Q",
-            title="Spread (%)",
-            scale=alt.Scale(zero=False)
-        )
-    ).add_selection(
-        brush
-    )
-
-    # Ligne zéro (référence)
-    zero_line = alt.Chart(
-        pd.DataFrame({"y": [0]})
-    ).mark_rule(
-        color="red",
-        strokeDash=[4, 4],
-        strokeWidth=1
-    ).encode(
-        y="y:Q"
-    )
-
+    # Graphique des courbes de taux
     chart = (
-        (spread_line + zero_line)
+        alt.Chart(data)
+        .mark_line(strokeWidth=1.6)
+        .encode(
+            x=alt.X("Date:T", title="Date"),
+            y=alt.Y("Taux:Q", title="Taux (%)"),
+            color=alt.Color(
+                "Maturité:N",
+                scale=alt.Scale(
+                    domain=[
+                        "Taux US 10Y (%)",
+                        "Taux US 2Y (%)",
+                        "Taux US 3M (%)",
+                    ],
+                    range=[
+                        "#1f77b4",  # bleu 10Y
+                        "#ff7f0e",  # orange 2Y
+                        "#2ca02c",  # vert 3M
+                    ],
+                ),
+                legend=alt.Legend(title="Maturité"),
+            ),
+        )
+        .add_selection(brush)
         .properties(height=420)
         .interactive()
     )
@@ -50,11 +60,13 @@ def render_spread_altair(df):
     # Texte pédagogique
     st.markdown(
         """
-**Comment lire ce graphique ?**
+**Comment lire ces courbes ?**
 
-- 🟢 **Au-dessus de 0** : courbe des taux normale  
-- 🔴 **Sous 0** : inversion des taux (signal macro avancé)  
+- 📉 **Aplatissement** : ralentissement économique  
+- 🔁 **Inversion (2Y ou 3M > 10Y)** : signal macro avancé  
+- 📈 **Re-pentification** : phase de transition ou reprise  
 
-Le spread est un **indicateur de régime**, pas un outil de timing.
+Les taux courts reflètent la politique monétaire,  
+les taux longs anticipent la croissance future.
 """
     )
