@@ -67,7 +67,7 @@ df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 # -------------------------
 # Affichage
 # -------------------------
-st.subheader("Évolution des taux US (2Y vs 10Y)")
+st.subheader("Évolution des taux US (10Y vs 2Y vs 3M)")
 fig = go.Figure()
 
 fig.add_trace(go.Scatter(
@@ -116,7 +116,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Spread des taux 10Y - 3M)
 st.markdown("""
-**Comment lire ce graphique ?**
+### Comment lire ce graphique ?
 
 Ce graphique montre la différence entre le taux d’intérêt à long terme (10 ans)
 et le taux à très court terme (3 mois) aux États-Unis.
@@ -124,9 +124,10 @@ et le taux à très court terme (3 mois) aux États-Unis.
 - **Au-dessus de 0** : situation économique normale  
 - **En dessous de 0** : inversion des taux, signal d’alerte économique  
 
-Historiquement, les inversions ont souvent précédé des ralentissements ou des récessions,
-mais avec un délai variable.
+Historiquement, les inversions ont souvent précédé des ralentissements
+ou des récessions, avec un délai variable.
 """)
+
 
 
 fig_spread = go.Figure()
