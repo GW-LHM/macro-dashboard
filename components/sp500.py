@@ -7,6 +7,7 @@ def render_sp500(sp500, periods):
 
     fig = go.Figure()
 
+    # Courbe S&P 500
     fig.add_trace(go.Scatter(
         x=sp500.index,
         y=sp500["S&P 500"],
@@ -17,10 +18,10 @@ def render_sp500(sp500, periods):
 
     # Bandes mensuelles d'inversion
     for start, end, months in periods:
-        if months >= 6:
-            color = "rgba(255,127,14,0.25)"   # 🟠 ≥ 6 mois
         if months >= 9:
-            color = "rgba(214,39,40,0.30)"   # 🔴 ≥ 9 mois
+            color = "rgba(214,39,40,0.15)"   # 🔴 ≥ 9 mois
+        elif months >= 6:
+            color = "rgba(255,127,14,0.12)"  # 🟠 ≥ 6 mois
         else:
             continue
 
@@ -35,23 +36,20 @@ def render_sp500(sp500, periods):
         height=450,
         hovermode="x unified",
         xaxis_title="Date",
-        yaxis_title="S&P 500"
+        yaxis_title="S&P 500",
+        xaxis_range=[
+            sp500.index.min(),
+            sp500.index.max()
+        ]
     )
 
     fig.update_xaxes(
-    showgrid=True,
-    rangeslider_visible=True,
-    autorange=True,              # 👈 clé
-    fixedrange=False             # 👈 autorise le déplacement
-)
+        showgrid=True,
+        rangeslider_visible=True,
+        autorange=True,
+        fixedrange=False
+    )
 
     fig.update_yaxes(showgrid=True)
-    
-fig.update_layout(
-    xaxis_range=[
-        sp500.index.min(),
-        sp500.index.max()
-    ]
-)
 
     st.plotly_chart(fig, use_container_width=True)
