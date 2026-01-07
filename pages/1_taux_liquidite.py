@@ -70,7 +70,8 @@ fig.add_trace(go.Scatter(
     y=df["Taux US 10Y (%)"],
     mode="lines",
     name="Taux US 10Y",
-    line=dict(width=2)
+    line=dict(width=1, color="#1f77b4")  # bleu foncé
+
 ))
 
 fig.add_trace(go.Scatter(
@@ -78,7 +79,7 @@ fig.add_trace(go.Scatter(
     y=df["Taux US 2Y (%)"],
     mode="lines",
     name="Taux US 2Y",
-    line=dict(width=2)
+    line=dict(width=2, color="F54927")
 ))
 
 fig.update_layout(
