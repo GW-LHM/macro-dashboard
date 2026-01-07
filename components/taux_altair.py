@@ -30,13 +30,13 @@ def render_taux_altair(df):
 
     chart = (
         alt.Chart(data)
-        .mark_line(strokeWidth=1.6)
+        .mark_line(strokeWidth=0.8)
         .encode(
             x=alt.X("Date:T", title="Date"),
             y=alt.Y(
     "Taux:Q",
     title="Taux (%)",
-    scale=alt.Scale(domain=[0, 9])
+    scale=alt.Scale(domain=[0, 12])
 ),
 
             color=alt.Color(
