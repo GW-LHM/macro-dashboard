@@ -131,6 +131,12 @@ fig.update_yaxes(showgrid=True)
 st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Spread des taux 10Y - 3M")
+st.subheader("🧭 État macroéconomique")
+
+if spread_status == "alerte":
+    st.error(f"🔴 **Alerte macro** — Spread négatif depuis **{days_negative} jours**")
+else:
+    st.success("🟢 **Situation normale** — Spread positif")
 
 fig_spread = go.Figure()
 
