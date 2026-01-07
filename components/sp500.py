@@ -40,7 +40,7 @@ fig.update_layout(
     xaxis=dict(
         range=[sp500.index.min(), sp500.index.max()],
         fixedrange=False
-    )
+
 )
 
     fig.update_xaxes(
