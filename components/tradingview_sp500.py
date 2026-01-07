@@ -13,7 +13,7 @@ def render_tradingview_sp500():
 new TradingView.widget({
   "width": "100%",
   "height": 500,
-  "symbol": "SP:SPX",
+  "symbol": "INDEX:SPX",
   "interval": "M",
   "timezone": "Etc/UTC",
   "theme": "light",
