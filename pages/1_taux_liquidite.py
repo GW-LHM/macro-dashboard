@@ -1,30 +1,51 @@
 import streamlit as st
 import pandas as pd
-from pandas_datareader import data as pdr
-from datetime import datetime
+import requests
 
 st.header("🏦 Taux & Liquidité")
 
 st.markdown("""
-Analyse des taux d’intérêt américains via les données officielles de la Réserve fédérale (FRED).
+Analyse des taux d’intérêt américains à partir des données officielles FRED.
 Ce bloc constitue la fondation du cycle macroéconomique.
 """)
 
-# Paramètres
-start_date = datetime(2000, 1, 1)
-end_date = datetime.today()
+# -------------------------
+# Configuration FRED
+# -------------------------
+SERIES = {
+    "Taux US 2Y (%)": "DGS2",
+    "Taux US 10Y (%)": "DGS10"
+}
+
+BASE_URL = "https://api.stlouisfed.org/fred/series/observations"
 
 @st.cache_data
-def load_rates():
-    taux_2y = pdr.DataReader("DGS2", "fred", start_date, end_date)
-    taux_10y = pdr.DataReader("DGS10", "fred", start_date, end_date)
+def load_fred_series(series_id):
+    params = {
+        "series_id": series_id,
+        "api_key": None,          # clé non obligatoire pour usage simple
+        "file_type": "json"
+    }
+    response = requests.get(BASE_URL, params=params)
+    response.raise_for_status()
 
-    df = pd.concat([taux_2y, taux_10y], axis=1)
-    df.columns = ["Taux US 2Y (%)", "Taux US 10Y (%)"]
-    df = df.dropna()
-    return df
+    data = response.json()["observations"]
+    df = pd.DataFrame(data)[["date", "value"]]
+    df["date"] = pd.to_datetime(df["date"])
+    df["value"] = pd.to_numeric(df["value"], errors="coerce")
+    return df.set_index("date")
 
-df_rates = load_rates()
+# Chargement des données
+df = pd.DataFrame()
 
+for label, series_id in SERIES.items():
+    series = load_fred_series(series_id)
+    df[label] = series["value"]
+
+df = df.dropna()
+
+# -------------------------
+# Affichage
+# -------------------------
 st.subheader("Évolution des taux US (2Y vs 10Y)")
-st.line_chart(df_rates)
+st.line_chart(df)
