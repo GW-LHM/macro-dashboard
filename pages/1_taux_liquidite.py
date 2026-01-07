@@ -114,7 +114,20 @@ fig.update_yaxes(showgrid=True)
 
 st.plotly_chart(fig, use_container_width=True)
 
-st.subheader("Spread des taux – Signal macro")
+st.subheader("Spread des taux 10Y - 3M)
+st.markdown("""
+**Comment lire ce graphique ?**
+
+Ce graphique montre la différence entre le taux d’intérêt à long terme (10 ans)
+et le taux à très court terme (3 mois) aux États-Unis.
+
+- **Au-dessus de 0** : situation économique normale  
+- **En dessous de 0** : inversion des taux, signal d’alerte économique  
+
+Historiquement, les inversions ont souvent précédé des ralentissements ou des récessions,
+mais avec un délai variable.
+""")
+
 
 fig_spread = go.Figure()
 
