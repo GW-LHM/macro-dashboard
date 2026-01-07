@@ -33,7 +33,12 @@ def render_taux_altair(df):
         .mark_line(strokeWidth=1.6)
         .encode(
             x=alt.X("Date:T", title="Date"),
-            y=alt.Y("Taux:Q", title="Taux (%)"),
+            y=alt.Y(
+    "Taux:Q",
+    title="Taux (%)",
+    scale=alt.Scale(domain=[0, 6])
+),
+
             color=alt.Color(
                 "Maturité:N",
                 scale=alt.Scale(
