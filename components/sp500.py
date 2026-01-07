@@ -3,11 +3,10 @@ import plotly.graph_objects as go
 
 
 def render_sp500(sp500, periods):
-    st.subheader("📈 S&P 500 et contexte macro (spread 10Y – 3M)")
+    st.subheader("📈 S&P 500 et inversions du spread 10Y – 3M (mensuel)")
 
     fig = go.Figure()
 
-    # Courbe S&P 500
     fig.add_trace(go.Scatter(
         x=sp500.index,
         y=sp500["S&P 500"],
@@ -16,12 +15,12 @@ def render_sp500(sp500, periods):
         line=dict(color="#1f77b4", width=2)
     ))
 
-    # Barres verticales d'inversion
-    for start, end, days in periods:
-        if days >= 90:
-            color = "rgba(214,39,40,0.25)"   # 🔴 rouge
-        elif days >= 60:
-            color = "rgba(255,127,14,0.25)"  # 🟠 orange
+    # Bandes mensuelles d'inversion
+    for start, end, months in periods:
+        if months >= 6:
+            color = "rgba(255,127,14,0.25)"   # 🟠 ≥ 6 mois
+        if months >= 9:
+            color = "rgba(214,39,40,0.30)"   # 🔴 ≥ 9 mois
         else:
             continue
 
@@ -36,11 +35,10 @@ def render_sp500(sp500, periods):
         height=450,
         hovermode="x unified",
         xaxis_title="Date",
-        yaxis_title="S&P 500",
-        margin=dict(l=40, r=40, t=40, b=40)
+        yaxis_title="S&P 500"
     )
 
-    fig.update_xaxes(showgrid=True)
+    fig.update_xaxes(showgrid=True, rangeslider_visible=True)
     fig.update_yaxes(showgrid=True)
 
     st.plotly_chart(fig, use_container_width=True)
