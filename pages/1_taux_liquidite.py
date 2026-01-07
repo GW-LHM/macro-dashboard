@@ -63,6 +63,22 @@ df = df[df.index >= "2022-01-01"]
 df["Spread 10Y-2Y"] = df["Taux US 10Y (%)"] - df["Taux US 2Y (%)"]
 df["Spread 10Y-3M"] = df["Taux US 10Y (%)"] - df["Taux US 3M (%)"]
 
+# =========================
+# État macro & temporalité
+# =========================
+latest_spread = df["Spread 10Y-3M"].iloc[-1]
+
+# Détection de la période négative en cours
+negative_period = df["Spread 10Y-3M"] < 0
+
+if negative_period.iloc[-1]:
+    # nombre de jours consécutifs sous 0
+    days_negative = (negative_period[::-1].idxmax() - df.index[-1]).days
+    days_negative = abs(days_negative)
+    spread_status = "alerte"
+else:
+    days_negative = 0
+    spread_status = "normal"
 
 # -------------------------
 # Affichage
