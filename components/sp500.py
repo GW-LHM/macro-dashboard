@@ -46,5 +46,12 @@ def render_sp500(sp500, periods):
 )
 
     fig.update_yaxes(showgrid=True)
+    
+fig.update_layout(
+    xaxis_range=[
+        sp500.index.min(),
+        sp500.index.max()
+    ]
+)
 
     st.plotly_chart(fig, use_container_width=True)
