@@ -5,12 +5,13 @@ from data.fred import load_fred_series
 from components.taux_us import render_taux_us
 from components.spread import render_spread
 from components.fred_spread_embed import render_fred_spread
+from components.spread_altair import render_spread_altair
 
 
 st.header("🏦 Taux & Liquidité")
 
 st.divider()
-render_fred_spread()
+render_spread_altair(df)
 
 st.markdown("""
 Cette page analyse les taux d’intérêt américains et leur impact
