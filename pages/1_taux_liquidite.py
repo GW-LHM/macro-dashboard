@@ -4,10 +4,13 @@ import pandas as pd
 from data.fred import load_fred_series
 from components.taux_us import render_taux_us
 from components.spread import render_spread
-from components.tradingview_sp500 import render_tradingview_sp500
+from components.fred_spread_embed import render_fred_spread
 
 
 st.header("🏦 Taux & Liquidité")
+
+st.divider()
+render_fred_spread()
 
 st.markdown("""
 Cette page analyse les taux d’intérêt américains et leur impact
