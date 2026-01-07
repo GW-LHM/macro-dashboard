@@ -4,7 +4,7 @@ import pandas as pd
 from data.fred import load_fred_series
 from components.taux_us import render_taux_us
 from components.spread import render_spread
-from components.sp500 import render_sp500
+from components.tradingview_sp500 import render_tradingview_sp500
 
 
 st.header("🏦 Taux & Liquidité")
@@ -83,6 +83,5 @@ st.divider()
 render_spread(df)
 
 st.divider()
+render_tradingview_sp500()
 
-sp500_monthly = sp500.resample("M").mean()
-render_sp500(sp500_monthly, periods_monthly)
