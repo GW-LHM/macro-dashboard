@@ -104,4 +104,7 @@ render_spread(df)
 
 st.divider()
 
-render_sp500(sp500, periods)
+# S&P 500 en mensuel
+sp500_monthly = sp500.resample("M").mean()
+render_sp500(sp500_monthly, periods_monthly)
+
