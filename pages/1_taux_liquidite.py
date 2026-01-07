@@ -21,9 +21,6 @@ st.markdown(
     """
 Cette page analyse les **taux d’intérêt américains** et leur rôle
 dans le **cycle macroéconomique**.
-
-Les taux courts reflètent la politique monétaire,  
-les taux longs anticipent la croissance future.
 """
 )
 
