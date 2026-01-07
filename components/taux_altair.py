@@ -36,7 +36,7 @@ def render_taux_altair(df):
             y=alt.Y(
     "Taux:Q",
     title="Taux (%)",
-    scale=alt.Scale(domain=[0, 6])
+    scale=alt.Scale(domain=[0, 9])
 ),
 
             color=alt.Color(
