@@ -61,15 +61,51 @@ def render_tips_altair(df_tips):
     st.altair_chart(chart + zero_line, use_container_width=True)
 
     # Texte macro
-    st.markdown(
-        """
-**Comment lire les taux réels ?**
+    st.markdown("""
+### 📉 Taux réels (TIPS) — Pourquoi c’est crucial
 
-- 🔵 **Taux réels < 0** : capital bon marché, soutien aux actifs risqués  
-- ⚠️ **Taux réels > 0** : pression sur les valorisations  
-- 🔪 **Hausse durable des taux réels** : érosion progressive des bull markets  
+#### 🧠 Définition simple
+Les **taux réels** représentent le **vrai coût de l’argent**, une fois l’inflation retirée.  
+Ils indiquent combien on gagne (ou perd) **réellement** en prêtant de l’argent à l’État américain.
 
-Les taux réels n’agissent pas par choc brutal,
-mais par **compression lente des multiples**.
-"""
-    )
+👉 Quand on parle de **TIPS**, on parle directement de **taux réels**.
+
+---
+
+#### 💡 Pourquoi ça impacte les marchés
+Les marchés actions évoluent plus facilement quand :
+
+- 💰 l’argent est peu cher  
+- 📉 les rendements *sans risque* sont faibles  
+
+À l’inverse, lorsque les **taux réels montent** :
+
+- 📈 les obligations deviennent plus attractives  
+- ⚠️ les investisseurs prennent moins de risques  
+- 📉 les **valorisations boursières sont sous pression**
+
+---
+
+#### ⚠️ Le signal à surveiller
+Ce n’est pas seulement le **niveau** des taux réels qui compte,  
+mais surtout **la vitesse de leur hausse**.
+
+📈 **Hausse rapide des taux réels**  
+→ pression sur les actions  
+→ fragilisation du bull market  
+
+---
+
+#### 🟢🟠🔴 Lecture simple
+- 🟢 **Taux réels bas ou stables** → environnement favorable aux actions  
+- 🟠 **Taux réels positifs mais calmes** → marché plus fragile  
+- 🔴 **Taux réels en forte hausse** → réduction du risque recommandée  
+
+---
+
+#### 🧩 À retenir
+Les bull markets vivent avec de l’**argent bon marché**.  
+Quand l’argent devient **cher en termes réels**,  
+les marchés finissent **toujours par ralentir**.
+""")
+
