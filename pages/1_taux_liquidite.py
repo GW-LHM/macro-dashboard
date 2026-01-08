@@ -69,3 +69,20 @@ st.divider()
 # AFFICHAGE — SPREAD 10Y–3M
 # =========================
 render_spread_altair(df)
+
+# =========================
+# Séries TIPS (taux réels)
+# =========================
+SERIES_TIPS = {
+    "Taux réel US 10Y (%)": "DFII10",
+    "Taux réel US 5Y (%)": "DFII5",
+}
+
+df_tips = pd.DataFrame()
+
+for label, series_id in SERIES_TIPS.items():
+    df_tips[label] = load_fred_series(series_id)["value"]
+
+df_tips = df_tips.dropna()
+df_tips = df_tips[df_tips.index >= "2010-01-01"]
+
