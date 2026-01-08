@@ -9,6 +9,7 @@ import pandas as pd
 from data.fred import load_fred_series
 from components.taux_altair import render_taux_altair
 from components.spread_altair import render_spread_altair
+from components.tips_altair import render_tips_altair
 
 
 
@@ -85,4 +86,8 @@ for label, series_id in SERIES_TIPS.items():
 
 df_tips = df_tips.dropna()
 df_tips = df_tips[df_tips.index >= "2010-01-01"]
+
+st.divider()
+render_tips_altair(df_tips)
+
 
