@@ -22,7 +22,7 @@ def render_tips_altair(df_tips):
     # Graphique Altair
     chart = (
         alt.Chart(data)
-        .mark_line(strokeWidth=1.8)
+        .mark_line(strokeWidth=0.8)
         .encode(
             x=alt.X("Date:T", title="Date"),
             y=alt.Y(
